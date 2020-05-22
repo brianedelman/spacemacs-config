@@ -48,20 +48,11 @@ This function should only modify configuration layer settings."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      helm
-     (auto-completion :variables
-                      auto-completion-return-key-behavior 'complete
-                      auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-help-tooltip t
-                      auto-completion-enable-sort-by-usage t
-                      auto-completion-tab-key-behavior 'cycle
-                      auto-completion-complete-with-key-sequence nil
-                      auto-completion-complete-with-key-sequence-delay 0.1
-                      auto-completion-private-snippets-directory nil)
 
+     javascript
      better-defaults
      emacs-lisp
      git
-     react
      markdown
      org
      ;; (shell :variables
@@ -71,7 +62,22 @@ This function should only modify configuration layer settings."
      syntax-checking
      php
      django
-     javascript
+     lsp
+     (javascript :variables
+                 javascript-fmt-tool 'prettier
+                 javascript-import-tool 'import-js
+                 javascript-fmt-on-save t
+                 )
+     react
+     (auto-completion :variables
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-tab-key-behavior 'cycle
+                      auto-completion-complete-with-key-sequence nil
+                      auto-completion-complete-with-key-sequence-delay 0.3
+                      auto-completion-private-snippets-directory nil)
      imenu-list
      (python :variables python-enable-yapf-format-on-save t python-sort-imports-on-save t)
      dash
@@ -84,7 +90,6 @@ This function should only modify configuration layer settings."
                                       solidity-mode
                                       editorconfig
                                       yasnippet-snippets
-                                      prettier-js
                                       blacken
                                       )
    ;; A list of packages that cannot be updated.
@@ -529,6 +534,9 @@ you should place your code here."
   (global-set-key (kbd "C--") 'text-scale-decrease)
   (global-set-key (kbd "C-0") 'text-scale-mode)
   (global-set-key (kbd "C-'") #'imenu-list-smart-toggle)
+  (add-hook 'rjsx-mode-hook
+            (lambda ()
+              (add-hook 'before-save-hook 'prettier-js nil 'make-it-local)))
   ;; TODO removing for now to see if it helps with searching bug
   ;; (setq powerline-default-separator 'utf-8)
   (column-number-mode t)
@@ -561,9 +569,6 @@ you should place your code here."
   (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
   (setq company-echo-delay 0)                          ; remove annoying blinking
   (setq company-begin-commands '(self-insert-command)) ; start autocompletion only
-  (add-hook 'js2-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'prettier-js nil 'make-it-local)))
   )
 
 
@@ -698,7 +703,7 @@ static char *gnus-pointer[] = {
  '(org-src-block-faces (quote (("emacs-lisp" (:background "#F0FFF0")))))
  '(package-selected-packages
    (quote
-    (blacken lv dash-docs transient ibuffer-projectile nginx-mode imenu-list toml-mode racer flycheck-rust cargo rust-mode ng2-mode tide typescript-mode csv-mode graphql-mode doom-themes zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme spinner undo-tree rjsx-mode parent-mode pkg-info flx treepy graphql anzu diminish bind-map popup eslint-fix py-autopep8 isortify yaml-mode powershell bundler rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby inf-ruby multi prettier-js packed yasnippet-snippets org-mime highlight epl sql-indent django-mode ponylang-mode pony-snippets pony-mode bind-key ghub let-alist f jinja2-mode powerline projectile avy iedit smartparens evil goto-chg helm helm-core async hydra dash s solidity-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data helm-company helm-c-yasnippet fuzzy company-tern company-statistics company-quickhelp company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify web-beautify unfill tern smeargle pyvenv pytest pyenv-mode py-isort pip-requirements phpunit phpcbf php-extras php-auto-yasnippets orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc hy-mode dash-functional htmlize helm-pydoc helm-gitignore helm-dash gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor editorconfig drupal-mode php-mode diff-hl dash-at-point cython-mode coffee-mode auto-dictionary anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+    (blacken lv dash-docs transient ibuffer-projectile nginx-mode imenu-list toml-mode racer flycheck-rust cargo rust-mode ng2-mode tide typescript-mode csv-mode graphql-mode doom-themes zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme spinner undo-tree rjsx-mode parent-mode pkg-info flx treepy graphql anzu diminish bind-map popup eslint-fix py-autopep8 isortify yaml-mode powershell bundler rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby inf-ruby multi packed yasnippet-snippets org-mime highlight epl sql-indent django-mode ponylang-mode pony-snippets pony-mode bind-key ghub let-alist f jinja2-mode powerline projectile avy iedit smartparens evil goto-chg helm helm-core async hydra dash s solidity-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data helm-company helm-c-yasnippet fuzzy company-tern company-statistics company-quickhelp company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify web-beautify unfill tern smeargle pyvenv pytest pyenv-mode py-isort pip-requirements phpunit phpcbf php-extras php-auto-yasnippets orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc hy-mode dash-functional htmlize helm-pydoc helm-gitignore helm-dash gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor editorconfig drupal-mode php-mode diff-hl dash-at-point cython-mode coffee-mode auto-dictionary anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(pos-tip-background-color "#FFFACE")
  '(pos-tip-foreground-color "#272822")
@@ -967,3 +972,406 @@ static char *gnus-pointer[] = {
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(default ((((type nil)) (:background "#000000" :foreground "#f8f8f2")) (((class color) (min-colors 89)) (:background "#282a36" :foreground "#f8f8f2" :family "Source Code Pro" :foundry "nil" :slant normal :weight normal :height 130 :width normal)))))
+(defun dotspacemacs/emacs-custom-settings ()
+  "Emacs custom settings.
+This is an auto-generated function, do not modify its content directly, use
+Emacs customize menu instead.
+This function is called at the very end of Spacemacs initialization."
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(Linum-format "%7i ")
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-color-names-vector
+   ["#0a0814" "#f2241f" "#67b11d" "#b1951d" "#4f97d7" "#a31db1" "#28def0" "#b2b2b2"])
+ '(ansi-term-color-vector
+   [unspecified "#14191f" "#d15120" "#81af34" "#deae3e" "#7e9fc9" "#a878b5" "#7e9fc9" "#dcdddd"] t)
+ '(background-color "#202020")
+ '(background-mode dark)
+ '(beacon-color "#cc6666")
+ '(company-quickhelp-color-background "#4F4F4F")
+ '(company-quickhelp-color-foreground "#DCDCCC")
+ '(compilation-message-face (quote default))
+ '(cua-global-mark-cursor-color "#2aa198")
+ '(cua-normal-cursor-color "#657b83")
+ '(cua-overwrite-cursor-color "#b58900")
+ '(cua-read-only-cursor-color "#859900")
+ '(cursor-color "#cccccc")
+ '(cursor-type (quote bar))
+ '(custom-safe-themes
+   (quote
+    ("ff7625ad8aa2615eae96d6b4469fcc7d3d20b2e1ebc63b761a349bebbb9d23cb" default)))
+ '(diary-entry-marker (quote font-lock-variable-name-face))
+ '(emms-mode-line-icon-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *note[] = {
+/* width height num_colors chars_per_pixel */
+\"    10   11        2            1\",
+/* colors */
+\". c #358d8d\",
+\"# c None s None\",
+/* pixels */
+\"###...####\",
+\"###.#...##\",
+\"###.###...\",
+\"###.#####.\",
+\"###.#####.\",
+\"#...#####.\",
+\"....#####.\",
+\"#..######.\",
+\"#######...\",
+\"######....\",
+\"#######..#\" };")))
+ '(evil-emacs-state-cursor (quote ("#D50000" hbar)) t)
+ '(evil-insert-state-cursor (quote ("#D50000" bar)) t)
+ '(evil-normal-state-cursor (quote ("#F57F17" box)) t)
+ '(evil-visual-state-cursor (quote ("#66BB6A" box)) t)
+ '(evil-want-Y-yank-to-eol t)
+ '(fci-rule-character-color "#202020")
+ '(fci-rule-color "#3C3D37" t)
+ '(flycheck-color-mode-line-face-to-color (quote mode-line-buffer-id))
+ '(foreground-color "#cccccc")
+ '(frame-background-mode (quote dark))
+ '(frame-brackground-mode (quote dark))
+ '(fringe-mode 6 nil (fringe))
+ '(gnus-logo-colors (quote ("#0d7b72" "#adadad")) t)
+ '(gnus-mode-line-image-cache
+   (quote
+    (image :type xpm :ascent center :data "/* XPM */
+static char *gnus-pointer[] = {
+/* width height num_colors chars_per_pixel */
+\"    18    13        2            1\",
+/* colors */
+\". c #358d8d\",
+\"# c None s None\",
+/* pixels */
+\"##################\",
+\"######..##..######\",
+\"#####........#####\",
+\"#.##.##..##...####\",
+\"#...####.###...##.\",
+\"#..###.######.....\",
+\"#####.########...#\",
+\"###########.######\",
+\"####.###.#..######\",
+\"######..###.######\",
+\"###....####.######\",
+\"###..######.######\",
+\"###########.######\" };")) t)
+ '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
+ '(highlight-indent-guides-auto-enabled nil)
+ '(highlight-symbol-colors
+   (quote
+    ("#EFFF00" "#73CD4F" "#83DDFF" "MediumPurple1" "#66CDAA" "DarkOrange" "HotPink1" "#809FFF" "#ADFF2F")))
+ '(highlight-symbol-foreground-color "#586e75")
+ '(highlight-tail-colors
+   (quote
+    (("#3C3D37" . 0)
+     ("#679A01" . 20)
+     ("#4BBEAE" . 30)
+     ("#1DB4D0" . 50)
+     ("#9A8F21" . 60)
+     ("#A75B00" . 70)
+     ("#F309DF" . 85)
+     ("#3C3D37" . 100))))
+ '(hl-bg-colors
+   (quote
+    ("#DEB542" "#F2804F" "#FF6E64" "#F771AC" "#9EA0E5" "#69B7F0" "#69CABF" "#B4C342")))
+ '(hl-fg-colors
+   (quote
+    ("#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3" "#fdf6e3")))
+ '(hl-paren-background-colors
+   (quote
+    ("#00FF99" "#CCFF99" "#FFCC99" "#FF9999" "#FF99CC" "#CC99FF" "#9999FF" "#99CCFF" "#99FFCC" "#7FFF00")))
+ '(hl-paren-colors (quote ("#326B6B")))
+ '(hl-sexp-background-color "#1c1f26")
+ '(linum-format " %7d ")
+ '(magit-diff-use-overlays nil)
+ '(main-line-color1 "#1E1E1E")
+ '(main-line-color2 "#111111")
+ '(main-line-separator-style (quote chamfer))
+ '(notmuch-search-line-faces
+   (quote
+    (("unread" :foreground "#aeee00")
+     ("flagged" :foreground "#0a9dff")
+     ("deleted" :foreground "#ff2c4b" :bold t))))
+ '(nrepl-message-colors
+   (quote
+    ("#dc322f" "#cb4b16" "#b58900" "#546E00" "#B4C342" "#00629D" "#2aa198" "#d33682" "#6c71c4")))
+ '(org-src-block-faces (quote (("emacs-lisp" (:background "#F0FFF0")))))
+ '(package-selected-packages
+   (quote
+    (blacken lv dash-docs transient ibuffer-projectile nginx-mode imenu-list toml-mode racer flycheck-rust cargo rust-mode ng2-mode tide typescript-mode csv-mode graphql-mode doom-themes zenburn-theme zen-and-art-theme white-sand-theme underwater-theme ujelly-theme twilight-theme twilight-bright-theme twilight-anti-bright-theme toxi-theme tao-theme tangotango-theme tango-plus-theme tango-2-theme sunny-day-theme sublime-themes subatomic256-theme subatomic-theme spacegray-theme soothe-theme solarized-theme soft-stone-theme soft-morning-theme soft-charcoal-theme smyx-theme seti-theme reverse-theme rebecca-theme railscasts-theme purple-haze-theme professional-theme planet-theme phoenix-dark-pink-theme phoenix-dark-mono-theme organic-green-theme omtose-phellack-theme oldlace-theme occidental-theme obsidian-theme noctilux-theme naquadah-theme mustang-theme monokai-theme monochrome-theme molokai-theme moe-theme minimal-theme material-theme majapahit-theme madhat2r-theme lush-theme light-soap-theme jbeans-theme jazz-theme ir-black-theme inkpot-theme heroku-theme hemisu-theme hc-zenburn-theme gruvbox-theme gruber-darker-theme grandshell-theme gotham-theme gandalf-theme flatui-theme flatland-theme farmhouse-theme exotica-theme espresso-theme django-theme darktooth-theme autothemer darkokai-theme darkmine-theme darkburn-theme dakrone-theme cyberpunk-theme color-theme-sanityinc-tomorrow color-theme-sanityinc-solarized clues-theme cherry-blossom-theme busybee-theme bubbleberry-theme birds-of-paradise-plus-theme badwolf-theme apropospriate-theme anti-zenburn-theme ample-zen-theme ample-theme alect-themes afternoon-theme spinner undo-tree rjsx-mode parent-mode pkg-info flx treepy graphql anzu diminish bind-map popup eslint-fix py-autopep8 isortify yaml-mode powershell bundler rvm ruby-tools ruby-test-mode rubocop rspec-mode robe rbenv rake minitest chruby inf-ruby multi packed yasnippet-snippets org-mime highlight epl sql-indent django-mode ponylang-mode pony-snippets pony-mode bind-key ghub let-alist f jinja2-mode powerline projectile avy iedit smartparens evil goto-chg helm helm-core async hydra dash s solidity-mode web-mode tagedit slim-mode scss-mode sass-mode pug-mode less-css-mode helm-css-scss haml-mode emmet-mode company-web web-completion-data helm-company helm-c-yasnippet fuzzy company-tern company-statistics company-quickhelp company-anaconda company auto-yasnippet ac-ispell auto-complete yapfify web-beautify unfill tern smeargle pyvenv pytest pyenv-mode py-isort pip-requirements phpunit phpcbf php-extras php-auto-yasnippets orgit org-projectile org-category-capture org-present org-pomodoro alert log4e gntp org-download mwim mmm-mode markdown-toc markdown-mode magit-gitflow livid-mode skewer-mode simple-httpd live-py-mode json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc hy-mode dash-functional htmlize helm-pydoc helm-gitignore helm-dash gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck evil-magit magit magit-popup git-commit with-editor editorconfig drupal-mode php-mode diff-hl dash-at-point cython-mode coffee-mode auto-dictionary anaconda-mode pythonic ws-butler winum which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu elisp-slime-nav dumb-jump define-word column-enforce-mode clean-aindent-mode auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line)))
+ '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
+ '(pos-tip-background-color "#FFFACE")
+ '(pos-tip-foreground-color "#272822")
+ '(powerline-color1 "#1E1E1E")
+ '(powerline-color2 "#111111")
+ '(safe-local-variable-values
+   (quote
+    ((eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=auricroad.auricroad.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "auricroad")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=wasd.wasd.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "wasd")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=prelude.prelude.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "prelude")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=Maco.Maco.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "Maco")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=elevendirect.elevendirect.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "elevendirect")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=sampleapp.sampleapp.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "sampleapp")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=testapp.testapp.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "testapp")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=lightmatterblog.lightmatterblog.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "lightmatterblog")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=twochairs.twochairs.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "twochairs")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=corigin.corigin.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "corigin")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=lightjobs.lightjobs.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "lightjobs")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=jobboard.jobboard.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "jobboard")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=cadence.cadence.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "cadence")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE={{cookiecutter.repo_name}}.{{cookiecutter.repo_name}}.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "{{cookiecutter.repo_name}}")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=lacma.lacma.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "lacma")
+     (eval progn
+           (setq python-shell-process-environment
+                 (list "DJANGO_SETTINGS_MODULE=meterx.meterx.settings.local")
+                 python-shell-extra-pythonpaths
+                 (list
+                  (expand-file-name
+                   (locate-dominating-file default-directory dir-locals-file)))
+                 python-shell-interpreter-args
+                 (concat "-i "
+                         (expand-file-name
+                          (locate-dominating-file default-directory dir-locals-file))
+                         "manage.py shell_plus --plain")))
+     (pyvenv-workon . "meterx")
+     (python-shell-interpreter . "python"))))
+ '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#eee8d5" 0.2))
+ '(sml/active-background-color "#34495e")
+ '(sml/active-foreground-color "#ecf0f1")
+ '(sml/inactive-background-color "#dfe4ea")
+ '(sml/inactive-foreground-color "#34495e")
+ '(tabbar-background-color "#ffffffffffff")
+ '(term-default-bg-color "#fdf6e3")
+ '(term-default-fg-color "#657b83")
+ '(vc-annotate-background nil)
+ '(vc-annotate-background-mode nil)
+ '(vc-annotate-color-map
+   (quote
+    ((20 . "#F92672")
+     (40 . "#CF4F1F")
+     (60 . "#C26C0F")
+     (80 . "#E6DB74")
+     (100 . "#AB8C00")
+     (120 . "#A18F00")
+     (140 . "#989200")
+     (160 . "#8E9500")
+     (180 . "#A6E22E")
+     (200 . "#729A1E")
+     (220 . "#609C3C")
+     (240 . "#4E9D5B")
+     (260 . "#3C9F79")
+     (280 . "#A1EFE4")
+     (300 . "#299BA6")
+     (320 . "#2896B5")
+     (340 . "#2790C3")
+     (360 . "#66D9EF"))))
+ '(vc-annotate-very-old-color nil)
+ '(weechat-color-list
+   (quote
+    (unspecified "#272822" "#3C3D37" "#F70057" "#F92672" "#86C30D" "#A6E22E" "#BEB244" "#E6DB74" "#40CAE4" "#66D9EF" "#FB35EA" "#FD5FF0" "#74DBCD" "#A1EFE4" "#F8F8F2" "#F8F8F0")))
+ '(when
+      (or
+       (not
+        (boundp
+         (quote ansi-term-color-vector)))
+       (not
+        (facep
+         (aref ansi-term-color-vector 0)))))
+ '(xterm-color-names
+   ["#eee8d5" "#dc322f" "#859900" "#b58900" "#268bd2" "#d33682" "#2aa198" "#073642"])
+ '(xterm-color-names-bright
+   ["#fdf6e3" "#cb4b16" "#93a1a1" "#839496" "#657b83" "#6c71c4" "#586e75" "#002b36"]))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(default ((((type nil)) (:background "#000000" :foreground "#f8f8f2")) (((class color) (min-colors 89)) (:background "#282a36" :foreground "#f8f8f2" :family "Source Code Pro" :foundry "nil" :slant normal :weight normal :height 130 :width normal)))))
+)
